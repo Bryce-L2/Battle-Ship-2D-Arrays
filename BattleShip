@@ -1,0 +1,98 @@
+#include <iostream>
+#include <ctime>
+
+using namespace std;
+
+const int rows = 10;
+const int cols = 10;
+int maxships = 10;
+int guesses = 50;
+
+int matrix[rows][cols];
+
+void Clear() {
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            matrix[i][j] = 0;
+        }
+    }
+}
+
+void Show() {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int numShips() {
+    int c = 0;
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matrix[i][j] == 1) 
+                c++;
+            
+        }
+    }
+    return c;
+}
+
+void SetShips() {
+    int s = 0;
+    while (s < maxships) {
+        int x = rand() % rows;
+        int y = rand() % cols;
+        if (matrix[x][y] != 1) {
+            s++;
+            matrix[x][y] = 1;
+        }
+    }
+}
+
+bool attack(int x, int y) {
+    if (matrix[x][y] == 1) {
+        matrix[x][y] = 2;
+        return true;
+    }
+    return false;
+}
+
+int main()
+{
+    srand(time(NULL));
+    Clear();
+    SetShips();
+    int pos1, pos2;
+    char prompt;
+    cout << "To see number of ships left type s into the prompt \nTo see number of guesses left type g into the prompt \nTo surrender type y into the prompt" << endl;
+    while (1) {
+        
+        cout << "\nEnter where would you like to attack: ";
+        guesses--;
+        cin >> pos1 >> pos2;
+        if (attack(pos1, pos2))
+            cout << "Hit" << endl;
+        else
+            cout << "Miss" << endl;
+        cout << "\nWould you like to do anything? Enter (s/g/y) or n to not do anything. ";
+        cin >> prompt;
+        if (prompt == 'y' || prompt == 'Y') {
+            cout << "Game over \nHere was the enemy poitions: " << endl;
+            Show();
+            break;
+        }
+        if (prompt == 's' || prompt == 'S') {
+            cout << "\nThere are " << numShips() << " ships left." << endl;
+        }
+        if (prompt == 'g' || prompt == 'G') {
+            cout << "You have " << guesses << " guesses left." << endl;
+        }
+    }
+
+}
+
+
