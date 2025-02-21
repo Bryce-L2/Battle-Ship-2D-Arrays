@@ -9,12 +9,13 @@ int maxships = 10;
 int guesses = 50;
 
 int matrix[rows][cols];
+bool guessed[rows][cols];  
 
 void Clear() {
-
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             matrix[i][j] = 0;
+            guessed[i][j] = false;  
         }
     }
 }
@@ -30,12 +31,10 @@ void Show() {
 
 int numShips() {
     int c = 0;
-
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             if (matrix[i][j] == 1) 
                 c++;
-            
         }
     }
     return c;
@@ -69,19 +68,39 @@ int main()
     int pos1, pos2;
     char prompt;
     cout << "To see number of ships left type s into the prompt \nTo see number of guesses left type g into the prompt \nTo surrender type y into the prompt" << endl;
+    
     while (1) {
-        
+        if (guesses == 0) {
+            cout << "You ran out of guesses" << endl;
+            break;
+        }
+
         cout << "\nEnter where would you like to attack: ";
-        guesses--;
         cin >> pos1 >> pos2;
+
+        if (guessed[pos1][pos2]) {
+            cout << "You already guessed there try again." << endl;
+            continue;  
+        }
+
+        guessed[pos1][pos2] = true;
+        guesses--;  
+
         if (attack(pos1, pos2))
             cout << "Hit" << endl;
         else
             cout << "Miss" << endl;
-        cout << "\nWould you like to do anything? Enter (s/g/y) or n to not do anything. ";
+
+        if (numShips() == 0) {
+            cout << "Congratulations! You've hit all the ships!" << endl;
+            break;
+        }
+
+        cout << "\nWould you like to do anything? Enter (s/g/y) or n to not do anything: ";
         cin >> prompt;
+        
         if (prompt == 'y' || prompt == 'Y') {
-            cout << "Game over \nHere was the enemy poitions: " << endl;
+            cout << "Game over \nHere was the enemy positions (1 is a ship & 2 is a hit ship): " << endl;
             Show();
             break;
         }
@@ -94,5 +113,3 @@ int main()
     }
 
 }
-
-
