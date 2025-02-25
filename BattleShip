@@ -1,3 +1,7 @@
+// Bryce Lombardo, Danielle Delgado, and Zander Leon
+// Battleship 2D arrays
+// 2/25/2025
+//Extra: had 3 projects 
 #include <iostream>
 #include <ctime>
 
